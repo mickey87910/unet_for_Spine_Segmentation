@@ -23,14 +23,12 @@ value of workers to 1,use_multiprocessing to False
 
 # original
 
-IMAGES_PER_GPU = 2
 STEPS_PER_EPOCH = 1000
 VALIDATION_STEPS = 50
 TRAIN_ROIS_PER_IMAGE = 200
 
 # modify
 
-IMAGES_PER_GPU = 1
 STEPS_PER_EPOCH = 100
 VALIDATION_STEPS = 5
 TRAIN_ROIS_PER_IMAGE = 50

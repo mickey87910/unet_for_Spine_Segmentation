@@ -1,1 +1,0 @@
-python balloon.py splash --weights=C:\Users\Mickey\Desktop\spine_disease_predict\logs\balloon20200203T0007\mask_rcnn_balloon_0006.h5 --image=C:\Users\Mickey\Desktop\spine_disease_predict\datasets\balloon\val\5603212091_2dfe16ea72_b.jpg
