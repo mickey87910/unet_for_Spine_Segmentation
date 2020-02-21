@@ -1,2 +1,3 @@
 # AI_Spinal_disease_detection
-程式碼是可以訓練了但是1050Ti跑不動==
+## Requirement
+tensorflow <=1.15 <br>
