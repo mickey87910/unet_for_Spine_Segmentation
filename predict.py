@@ -29,7 +29,7 @@ from mrcnn import visualize
 MODEL_DIR = os.path.join(ROOT_DIR, "../logs")
  
 # Local path to trained weights file
-COCO_MODEL_PATH = os.path.join(MODEL_DIR ,"./shapes20200204T0121/mask_rcnn_shapes_0005.h5")
+COCO_MODEL_PATH = os.path.join(MODEL_DIR ,"./shapes20200302T2315/mask_rcnn_shapes_0100.h5")
 # Download COCO trained weights from Releases if needed
 if not os.path.exists(COCO_MODEL_PATH):
     utils.download_trained_weights(COCO_MODEL_PATH)
@@ -49,15 +49,15 @@ class ShapesConfig(Config):
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 1
+    IMAGES_PER_GPU = 4
  
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # background + 3 shapes
+    NUM_CLASSES = 1 + 2  # background + 3 shapes
  
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
-    IMAGE_MIN_DIM = 320
-    IMAGE_MAX_DIM = 384
+    IMAGE_MIN_DIM = 128
+    IMAGE_MAX_DIM = 512
  
     # Use smaller anchors because our image and objects are small
     RPN_ANCHOR_SCALES = (8 * 6, 16 * 6, 32 * 6, 64 * 6, 128 * 6)  # anchor side in pixels
@@ -67,10 +67,10 @@ class ShapesConfig(Config):
     TRAIN_ROIS_PER_IMAGE =100
  
     # Use a small epoch since the data is simple
-    STEPS_PER_EPOCH = 2
+    STEPS_PER_EPOCH = 32
  
     # use small validation steps since the epoch is small
-    VALIDATION_STEPS = 1
+    VALIDATION_STEPS = 8
  
 #import train_tongue
 #class InferenceConfig(coco.CocoConfig):
@@ -78,7 +78,7 @@ class InferenceConfig(ShapesConfig):
     # Set batch size to 1 since we'll be running inference on
     # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 1
+    IMAGES_PER_GPU = 4
  
 config = InferenceConfig()
  
@@ -94,17 +94,21 @@ model.load_weights(COCO_MODEL_PATH, by_name=True)
 # COCO Class names
 # Index of the class in the list is its ID. For example, to get ID of
 # the teddy bear class, use: class_names.index('teddy bear')
-class_names = ['BG', 'NORMAL']
+class_names = ['BG', 'Non-Degenerate','Degenerate']
 # Load a random image from the images folder
 # file_names = next(os.walk(IMAGE_DIR))[2]
-image = skimage.io.imread("../image_process/labelme_json_to_dataset/original/3870_json/img.png")
-image = skimage.color.gray2rgb(image)
-a=datetime.now()
-# Run detection
-results = model.detect([image], verbose=1)
-b=datetime.now()
-# Visualize results
-print("shijian",(b-a).seconds)
-r = results[0]
-visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
-                            class_names, r['scores'])
+VAL_PATH = "../val_datasets/"
+def image_detect(image_name):
+    image = skimage.io.imread(VAL_PATH+image_name)
+    image = skimage.color.gray2rgb(image)
+    a=datetime.now()
+    # Run detection
+    results = model.detect([image], verbose=1)
+    b=datetime.now()
+    # Visualize results
+    print("shijian",(b-a).seconds)
+    r = results[0]
+    visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],class_names, r['scores'])
+val_list = os.listdir(VAL_PATH)
+for image in val_list:
+    image_detect(image)

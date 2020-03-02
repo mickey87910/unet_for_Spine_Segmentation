@@ -48,10 +48,10 @@ class ShapesConfig(Config):
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 1
+    IMAGES_PER_GPU = 4
  
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # background + 1 shapes
+    NUM_CLASSES = 1 + 2  # background + 1 shapes
  
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
@@ -66,10 +66,10 @@ class ShapesConfig(Config):
     TRAIN_ROIS_PER_IMAGE = 100
  
     # Use a small epoch since the data is simple
-    STEPS_PER_EPOCH = 1
+    STEPS_PER_EPOCH = 32
  
     # use small validation steps since the epoch is small
-    VALIDATION_STEPS = 1
+    VALIDATION_STEPS = 8
  
  
 config = ShapesConfig()
@@ -120,7 +120,8 @@ class DrugDataset(utils.Dataset):
         height, width: the size of the generated images.
         """
         # Add classes
-        self.add_class("shapes", 1, "NORMAL")
+        self.add_class("shapes", 1, "Non-Degenerate")
+        self.add_class("shapes", 2, "Degenerate")
         for i in range(count):
             # 获取图片宽和高
             print(i)
@@ -157,10 +158,10 @@ class DrugDataset(utils.Dataset):
         labels = self.from_yaml_get_class(image_id)
         labels_form = []
         for i in range(len(labels)):
-            if labels[i].find("NORMAL") != -1:
-                labels_form.append("NORMAL")
-            elif labels[i].find("Abnormal") != -1:
-                labels_form.append("Abnormal")
+            if labels[i].find("Non-Degenerate") != -1:
+                labels_form.append("Non-Degenerate")
+            elif labels[i].find("Degenerate") != -1:
+                labels_form.append("Degenerate")
         class_ids = np.array([self.class_names.index(s) for s in labels_form])
         return mask, class_ids.astype(np.int32)
  
@@ -231,7 +232,7 @@ elif init_with == "last":
 # which layers to train by name pattern.
 model.train(dataset_train, dataset_val,
             learning_rate=config.LEARNING_RATE,
-            epochs=10,
+            epochs=100,
             layers='heads')
  
 # Fine tune all layers
