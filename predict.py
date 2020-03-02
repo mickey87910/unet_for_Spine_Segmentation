@@ -29,7 +29,7 @@ from mrcnn import visualize
 MODEL_DIR = os.path.join(ROOT_DIR, "../logs")
  
 # Local path to trained weights file
-COCO_MODEL_PATH = os.path.join(MODEL_DIR ,"./shapes20200302T2315/mask_rcnn_shapes_0100.h5")
+COCO_MODEL_PATH = os.path.join(MODEL_DIR ,"./shapes20200302T2315/mask_rcnn_shapes_0250.h5")
 # Download COCO trained weights from Releases if needed
 if not os.path.exists(COCO_MODEL_PATH):
     utils.download_trained_weights(COCO_MODEL_PATH)
@@ -78,7 +78,7 @@ class InferenceConfig(ShapesConfig):
     # Set batch size to 1 since we'll be running inference on
     # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 4
+    IMAGES_PER_GPU = 1
  
 config = InferenceConfig()
  
