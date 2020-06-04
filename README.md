@@ -1,4 +1,4 @@
-# AI_Spinal_disease_detection
+# unet_for_Spine_Segmentation
 ## Introduction
 人工智慧應用於脊椎椎骨退化狀態分類  
 本次計畫主要使用Unet辨識出脊椎3個區塊，並對其進行切割。  
