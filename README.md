@@ -2,6 +2,7 @@
 ## Introduction
 人工智慧應用於脊椎椎骨退化狀態分類  
 本次計畫主要使用Unet辨識出脊椎3個區塊，並對其進行切割。  
+For "Non-Disclosure Agreement" , spine dataset will not provide.
 ### 已完成：  
 可進行圖片切割  
 使用Unet辨識出3個區塊  
